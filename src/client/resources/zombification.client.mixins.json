@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.alfred.zombification.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "LivingEntityRendererMixin",
+    "PlayerEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

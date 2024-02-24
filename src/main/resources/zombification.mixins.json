@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "com.alfred.zombification.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"ActiveTargetGoalMixin",
+		"PlayerEntityMixin",
+		"ServerPlayerEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

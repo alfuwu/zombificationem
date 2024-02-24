@@ -1,0 +1,47 @@
+{
+	"schemaVersion": 1,
+	"id": "zombification",
+	"version": "${version}",
+	"name": "Zombification",
+	"description": "",
+	"authors": [
+		"Alfred"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"accessWidener": "zombification.accesswidener",
+	"license": "MIT",
+	"icon": "assets/zombification/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.alfred.zombification.ZombieMod"
+		],
+		"client": [
+			"com.alfred.zombification.ZombieClient"
+		],
+		"cardinal-components": [
+			"com.alfred.zombification.ZombieMod"
+		]
+	},
+	"mixins": [
+      "zombification.mixins.json",
+		{
+			"config": "zombification.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"custom": {
+		"cardinal-components": [
+			"zombification:zombie"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.15.0",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
