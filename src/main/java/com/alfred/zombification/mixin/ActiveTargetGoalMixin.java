@@ -30,31 +30,31 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoal {
         super(mob, checkVisibility);
     }
 
-    @Override
+    /*@Override
     public boolean shouldContinue() {
         boolean bl = this.target == null || ZombieMod.ZOMBIE.get(this.target).isZombified();
         return super.shouldContinue() && (!bl || this.targetClass == MobEntity.class || MobEntity.class.isAssignableFrom(this.targetClass));
-    }
+    }*/
 
     @Inject(method = "<init>(Lnet/minecraft/entity/mob/MobEntity;Ljava/lang/Class;IZZLjava/util/function/Predicate;)V", at = @At("TAIL"))
     private void modifyPredicate(MobEntity mob, Class<? extends LivingEntity> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate, CallbackInfo ci) {
-        if (targetClass == MobEntity.class || MobEntity.class.isAssignableFrom(targetClass)) {
+        /*if (targetClass == MobEntity.class || MobEntity.class.isAssignableFrom(targetClass)) {
             Predicate<LivingEntity> zombificationPredicate = entity -> ZombieMod.ZOMBIE.get(entity).isZombified();
             if (targetPredicate != null)
                 targetPredicate = targetPredicate.or(zombificationPredicate);
             else
                 targetPredicate = zombificationPredicate;
-        } else {
+        } else {*/
             Predicate<LivingEntity> zombificationPredicate = entity -> !ZombieMod.ZOMBIE.get(entity).isZombified();
             if (targetPredicate != null)
                 targetPredicate = targetPredicate.and(zombificationPredicate);
             else
                 targetPredicate = zombificationPredicate;
-        }
+        //}
         this.targetPredicate = TargetPredicate.createAttackable().setBaseMaxDistance(this.getFollowRange()).setPredicate(targetPredicate);
     }
 
-    @Inject(method = "findClosestTarget", at = @At("RETURN"))
+    /*@Inject(method = "findClosestTarget", at = @At("RETURN"))
     private void changeTarget(CallbackInfo ci) {
         if (this.targetClass == MobEntity.class || MobEntity.class.isAssignableFrom(this.targetClass)) {
             LivingEntity closerEntity = this.mob.getWorld().getClosestEntity(this.mob.getWorld().getEntitiesByClass(LivingEntity.class, this.getSearchBox(this.getFollowRange()), livingEntity -> ZombieMod.ZOMBIE.get(livingEntity).isZombified()),
@@ -62,5 +62,5 @@ public abstract class ActiveTargetGoalMixin extends TrackTargetGoal {
             if (this.targetEntity == null || (closerEntity != null && closerEntity.squaredDistanceTo(this.mob) < this.targetEntity.squaredDistanceTo(this.mob)))
                 this.targetEntity = closerEntity;
         }
-    }
+    }*/
 }

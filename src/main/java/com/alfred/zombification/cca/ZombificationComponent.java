@@ -31,12 +31,12 @@ public class ZombificationComponent implements AutoSyncedComponent {
 
     public void setZombified(boolean bl) {
         this.zombified = bl;
-        ZombieMod.ZOMBIE.sync(self);
+        ZombieMod.ZOMBIE.sync(this.self);
     }
 
     public void setUnzombifying(boolean bl) {
         this.unzombifying = bl;
-        ZombieMod.ZOMBIE.sync(self);
+        ZombieMod.ZOMBIE.sync(this.self);
     }
 
     public void setConversionTimer() {

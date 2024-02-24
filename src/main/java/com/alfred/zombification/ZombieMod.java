@@ -5,12 +5,11 @@ import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
+import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 	public static final ComponentKey<ZombificationComponent> ZOMBIE = ComponentRegistry.getOrCreate(identifier("zombie"), ZombificationComponent.class);
@@ -22,7 +21,10 @@ public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-		registry.registerFor(LivingEntity.class, ZOMBIE, ZombificationComponent::new);
+		registry.beginRegistration(LivingEntity.class, ZOMBIE)
+				.impl(ZombificationComponent.class)
+				.respawnStrategy(RespawnCopyStrategy.CHARACTER)
+				.end(ZombificationComponent::new);
 	}
 
 	public static Identifier identifier(String path) {
