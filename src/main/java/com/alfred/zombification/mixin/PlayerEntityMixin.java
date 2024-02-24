@@ -1,6 +1,8 @@
 package com.alfred.zombification.mixin;
 
 import com.alfred.zombification.ZombieMod;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
@@ -21,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -140,6 +143,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             this.setHealth(this.getMaxHealth());
             this.dead = false;
             this.inventory.selectedSlot = 0;
+            if ((PlayerEntity) (Object) this instanceof ServerPlayerEntity serverPlayer)
+                ServerPlayNetworking.send(serverPlayer, ZombieMod.SELECT_SLOT, new PacketByteBuf(Unpooled.copyShort(0)));
             EntityAttributeInstance moveSpeed = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             if (moveSpeed != null) {
                 moveSpeed.removeModifier(ZOMBIE_SPEED_MODIFIER);

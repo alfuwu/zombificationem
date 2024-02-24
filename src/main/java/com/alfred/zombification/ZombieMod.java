@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 
 public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 	public static final ComponentKey<ZombificationComponent> ZOMBIE = ComponentRegistry.getOrCreate(identifier("zombie"), ZombificationComponent.class);
+	public static final Identifier SELECT_SLOT = identifier("select_slot");
 
 	@Override
 	public void onInitialize() {
