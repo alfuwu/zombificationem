@@ -10,6 +10,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 	public static final ComponentKey<ZombificationComponent> ZOMBIE = ComponentRegistry.getOrCreate(identifier("zombie"), ZombificationComponent.class);
@@ -22,6 +23,7 @@ public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+		//registry.registerFor(LivingEntity.class, ZOMBIE, ZombificationComponent::new);
 		registry.beginRegistration(LivingEntity.class, ZOMBIE)
 				.impl(ZombificationComponent.class)
 				.respawnStrategy(RespawnCopyStrategy.CHARACTER)

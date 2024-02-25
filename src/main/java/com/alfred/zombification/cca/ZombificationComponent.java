@@ -40,31 +40,48 @@ public class ZombificationComponent implements AutoSyncedComponent {
     }
 
     public void setConversionTimer() {
-        this.setConversionTimer(BASE_CONVERSION_DELAY + self.getRandom().nextInt(2401));
+        this.setConversionTimer((BASE_CONVERSION_DELAY + self.getRandom().nextInt(2401)) / 720);
     }
 
     public void setConversionTimer(int i) {
         this.conversionTimer = i;
+        ZombieMod.ZOMBIE.sync(this.self);
     }
 
     public void conversionTimerTick(int i) {
         this.conversionTimer -= i;
+        ZombieMod.ZOMBIE.sync(this.self);
+    }
+
+    public void setZombifiedNoSync(boolean bl) {
+        this.zombified = bl;
+    }
+
+    public void setUnzombifyingNoSync(boolean bl) {
+        this.unzombifying = bl;
+        ZombieMod.ZOMBIE.sync(this.self);
+    }
+
+    public void setConversionTimerNoSync(int i) {
+        this.conversionTimer = i;
     }
 
     @Override
     public void readFromNbt(NbtCompound nbt) {
+        // Don't sync until done reading NBT, to minimize sent packets
         if (nbt.contains("Zombified", NbtElement.BYTE_TYPE))
-            this.setZombified(nbt.getBoolean("Zombified"));
+            this.setZombifiedNoSync(nbt.getBoolean("Zombified"));
         if (nbt.contains("ConversionTime", NbtElement.NUMBER_TYPE)) {
             int conversionTime = nbt.getInt("ConversionTime");
-            if (conversionTime == -1) {
-                this.setUnzombifying(false);
-                this.conversionTimer = -1;
+            if (conversionTime < 0) {
+                this.setUnzombifyingNoSync(false);
+                this.setConversionTimerNoSync(-1);
             } else {
-                this.setUnzombifying(true);
-                this.conversionTimer = conversionTime;
+                this.setUnzombifyingNoSync(true);
+                this.setConversionTimerNoSync(conversionTime);
             }
         }
+        ZombieMod.ZOMBIE.sync(this.self);
     }
 
     @Override

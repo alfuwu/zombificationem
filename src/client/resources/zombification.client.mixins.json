@@ -3,6 +3,8 @@
   "package": "com.alfred.zombification.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "BipedEntityModelMixin",
+    "InGameHudMixin",
     "LivingEntityRendererMixin",
     "MinecraftClientMixin",
     "PlayerEntityModelMixin",
