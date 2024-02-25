@@ -10,11 +10,13 @@ import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+
+import java.util.UUID;
 
 public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 	public static final ComponentKey<ZombificationComponent> ZOMBIE = ComponentRegistry.getOrCreate(identifier("zombie"), ZombificationComponent.class);
 	public static final Identifier SELECT_SLOT = identifier("select_slot");
+	public static final UUID ZOMBIE_SPEED_MODIFIER = UUID.fromString("121C953C-A264-423A-B6fB-C51FC5C040B9");
 
 	@Override
 	public void onInitialize() {

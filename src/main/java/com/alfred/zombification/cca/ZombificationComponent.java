@@ -30,21 +30,21 @@ public class ZombificationComponent implements AutoSyncedComponent {
     }
 
     public void setZombified(boolean bl) {
-        this.zombified = bl;
+        this.setZombifiedNoSync(bl);
         ZombieMod.ZOMBIE.sync(this.self);
     }
 
     public void setUnzombifying(boolean bl) {
-        this.unzombifying = bl;
+        this.setUnzombifyingNoSync(bl);
         ZombieMod.ZOMBIE.sync(this.self);
     }
 
     public void setConversionTimer() {
-        this.setConversionTimer((BASE_CONVERSION_DELAY + self.getRandom().nextInt(2401)) / 720);
+        this.setConversionTimer((BASE_CONVERSION_DELAY + self.getRandom().nextInt(2401)));
     }
 
     public void setConversionTimer(int i) {
-        this.conversionTimer = i;
+        this.setConversionTimerNoSync(i);
         ZombieMod.ZOMBIE.sync(this.self);
     }
 
@@ -59,7 +59,6 @@ public class ZombificationComponent implements AutoSyncedComponent {
 
     public void setUnzombifyingNoSync(boolean bl) {
         this.unzombifying = bl;
-        ZombieMod.ZOMBIE.sync(this.self);
     }
 
     public void setConversionTimerNoSync(int i) {
@@ -68,7 +67,7 @@ public class ZombificationComponent implements AutoSyncedComponent {
 
     @Override
     public void readFromNbt(NbtCompound nbt) {
-        // Don't sync until done reading NBT, to minimize sent packets
+        // Don't sync until done reading NBT, to minimize amount of packets
         if (nbt.contains("Zombified", NbtElement.BYTE_TYPE))
             this.setZombifiedNoSync(nbt.getBoolean("Zombified"));
         if (nbt.contains("ConversionTime", NbtElement.NUMBER_TYPE)) {

@@ -24,7 +24,7 @@ loom {
 		}
 	}
 
-	accessWidenerPath = file "src/main/resources/zombification.accesswidener"
+	accessWidenerPath = file "src/client/resources/zombification.accesswidener"
 }
 
 dependencies {
