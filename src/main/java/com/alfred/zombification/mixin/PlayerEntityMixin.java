@@ -7,6 +7,7 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -14,6 +15,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.mob.ZombieVillagerEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerAbilities;
@@ -21,13 +23,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -107,6 +114,27 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         } else if (stack.getItem() != Items.GOLDEN_APPLE && stack.getItem().getFoodComponent() != null && !stack.getItem().getFoodComponent().getStatusEffects().stream().anyMatch(pair -> !pair.getFirst().getEffectType().isBeneficial())) {
             // If the food item had no bad status effects, apply hunger
             this.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 600, 0));
+        }
+    }
+
+    @Inject(method = "onKilledOther", at = @At("HEAD"), cancellable = true)
+    private void convertVillager(ServerWorld world, LivingEntity other, CallbackInfoReturnable<Boolean> cir) {
+        if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && other instanceof VillagerEntity villagerEntity) {
+            if (world.getDifficulty() != Difficulty.HARD && this.random.nextBoolean())
+                return;
+
+            ZombieVillagerEntity zombieVillagerEntity = villagerEntity.convertTo(EntityType.ZOMBIE_VILLAGER, false);
+            if (zombieVillagerEntity != null) {
+                zombieVillagerEntity.initialize(world, world.getLocalDifficulty(zombieVillagerEntity.getBlockPos()), SpawnReason.CONVERSION, new ZombieEntity.ZombieData(false, true), null);
+                zombieVillagerEntity.setVillagerData(villagerEntity.getVillagerData());
+                zombieVillagerEntity.setGossipData(villagerEntity.getGossip().serialize(NbtOps.INSTANCE));
+                zombieVillagerEntity.setOfferData(villagerEntity.getOffers().toNbt());
+                zombieVillagerEntity.setXp(villagerEntity.getExperience());
+                if (!this.isSilent())
+                    world.syncWorldEvent(null, 1026, this.getBlockPos(), 0);
+
+                cir.setReturnValue(false);
+            }
         }
     }
 }
