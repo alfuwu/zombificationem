@@ -90,50 +90,54 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Inject(method = "attack", at = @At("HEAD"))
     private void nom(Entity target, CallbackInfo ci) {
-        if (target instanceof VillagerEntity || target instanceof PlayerEntity)
+        if (ZombieMod.ZOMBIE.get(this).isZombified() && (target instanceof VillagerEntity || target instanceof PlayerEntity))
             this.getHungerManager().add(1, 0.2f);
     }
 
     @Inject(method = "eatFood", at = @At("HEAD"), cancellable = true)
     private void modifyFood(World world, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
-        if (stack.getItem() == Items.ROTTEN_FLESH && ZombieMod.ZOMBIE.get(this).isZombified()) {
-            // Eat without applying effects
-            this.getHungerManager().eat(stack.getItem(), stack);
-            this.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-            world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5f, world.random.nextFloat() * 0.1f + 0.9f);
-            if ((PlayerEntity) (Object) this instanceof ServerPlayerEntity serverPlayer)
-                Criteria.CONSUME_ITEM.trigger(serverPlayer, stack);
-            if (stack.isFood()) {
-                world.playSound(null, this.getX(), this.getY(), this.getZ(), this.getEatSound(stack), SoundCategory.NEUTRAL, 1.0f, 1.0f + (world.random.nextFloat() - world.random.nextFloat()) * 0.4f);
-                if (!this.getAbilities().creativeMode)
-                    stack.decrement(1);
+        if (ZombieMod.ZOMBIE.get(this).isZombified()) {
+            if (stack.getItem() == Items.ROTTEN_FLESH) {
+                // Eat without applying effects
+                this.getHungerManager().eat(stack.getItem(), stack);
+                this.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
+                world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5f, world.random.nextFloat() * 0.1f + 0.9f);
+                if ((PlayerEntity) (Object) this instanceof ServerPlayerEntity serverPlayer)
+                    Criteria.CONSUME_ITEM.trigger(serverPlayer, stack);
+                if (stack.isFood()) {
+                    world.playSound(null, this.getX(), this.getY(), this.getZ(), this.getEatSound(stack), SoundCategory.NEUTRAL, 1.0f, 1.0f + (world.random.nextFloat() - world.random.nextFloat()) * 0.4f);
+                    if (!this.getAbilities().creativeMode)
+                        stack.decrement(1);
 
-                this.emitGameEvent(GameEvent.EAT);
+                    this.emitGameEvent(GameEvent.EAT);
+                }
+                cir.setReturnValue(stack);
+            } else if (stack.getItem() != Items.GOLDEN_APPLE && stack.getItem().getFoodComponent() != null && !stack.getItem().getFoodComponent().getStatusEffects().stream().anyMatch(pair -> !pair.getFirst().getEffectType().isBeneficial())) {
+                // If the food item had no bad status effects, apply hunger
+                this.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 600, 0));
             }
-            cir.setReturnValue(stack);
-        } else if (stack.getItem() != Items.GOLDEN_APPLE && stack.getItem().getFoodComponent() != null && !stack.getItem().getFoodComponent().getStatusEffects().stream().anyMatch(pair -> !pair.getFirst().getEffectType().isBeneficial())) {
-            // If the food item had no bad status effects, apply hunger
-            this.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 600, 0));
         }
     }
 
     @Inject(method = "onKilledOther", at = @At("HEAD"), cancellable = true)
     private void convertVillager(ServerWorld world, LivingEntity other, CallbackInfoReturnable<Boolean> cir) {
-        if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && other instanceof VillagerEntity villagerEntity) {
-            if (world.getDifficulty() != Difficulty.HARD && this.random.nextBoolean())
-                return;
+        if (ZombieMod.ZOMBIE.get(this).isZombified()) {
+            if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && other instanceof VillagerEntity villagerEntity) {
+                if (world.getDifficulty() != Difficulty.HARD && this.random.nextBoolean())
+                    return;
 
-            ZombieVillagerEntity zombieVillagerEntity = villagerEntity.convertTo(EntityType.ZOMBIE_VILLAGER, false);
-            if (zombieVillagerEntity != null) {
-                zombieVillagerEntity.initialize(world, world.getLocalDifficulty(zombieVillagerEntity.getBlockPos()), SpawnReason.CONVERSION, new ZombieEntity.ZombieData(false, true), null);
-                zombieVillagerEntity.setVillagerData(villagerEntity.getVillagerData());
-                zombieVillagerEntity.setGossipData(villagerEntity.getGossip().serialize(NbtOps.INSTANCE));
-                zombieVillagerEntity.setOfferData(villagerEntity.getOffers().toNbt());
-                zombieVillagerEntity.setXp(villagerEntity.getExperience());
-                if (!this.isSilent())
-                    world.syncWorldEvent(null, 1026, this.getBlockPos(), 0);
+                ZombieVillagerEntity zombieVillagerEntity = villagerEntity.convertTo(EntityType.ZOMBIE_VILLAGER, false);
+                if (zombieVillagerEntity != null) {
+                    zombieVillagerEntity.initialize(world, world.getLocalDifficulty(zombieVillagerEntity.getBlockPos()), SpawnReason.CONVERSION, new ZombieEntity.ZombieData(false, true), null);
+                    zombieVillagerEntity.setVillagerData(villagerEntity.getVillagerData());
+                    zombieVillagerEntity.setGossipData(villagerEntity.getGossip().serialize(NbtOps.INSTANCE));
+                    zombieVillagerEntity.setOfferData(villagerEntity.getOffers().toNbt());
+                    zombieVillagerEntity.setXp(villagerEntity.getExperience());
+                    if (!this.isSilent())
+                        world.syncWorldEvent(null, 1026, this.getBlockPos(), 0);
 
-                cir.setReturnValue(false);
+                    cir.setReturnValue(false);
+                }
             }
         }
     }
