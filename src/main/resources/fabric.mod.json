@@ -8,8 +8,7 @@
 		"Alfred"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/alfuwu/Zombificationem"
 	},
 	"accessWidener": "zombification.accesswidener",
 	"license": "MIT",
@@ -40,7 +39,7 @@
 	},
 	"depends": {
 		"fabricloader": ">=0.15.0",
-		"minecraft": "~1.20.4",
+		"minecraft": "~1.20.3",
 		"java": ">=17",
 		"fabric-api": "*"
 	}

@@ -10,6 +10,7 @@ import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -88,6 +89,12 @@ public abstract class LivingEntityMixin extends Entity {
             ZombieMod.ZOMBIE.get(this).setConversionTimer();
             this.playSound(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE, 1.0f, 1.0f);
         }
+    }
+
+    @Inject(method = "canTarget(Lnet/minecraft/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
+    private void noTargetZombs(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
+        if (ZombieMod.ZOMBIE.get(target).isZombified() && this instanceof Monster)
+            cir.setReturnValue(false);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

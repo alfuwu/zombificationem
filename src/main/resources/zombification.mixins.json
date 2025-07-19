@@ -3,7 +3,7 @@
   "package": "com.alfred.zombification.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ActiveTargetGoalMixin",
+    "IronGolemEntityMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
