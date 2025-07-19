@@ -25,7 +25,6 @@ public class ZombieMod implements ModInitializer, EntityComponentInitializer {
 
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-		//registry.registerFor(LivingEntity.class, ZOMBIE, ZombificationComponent::new);
 		registry.beginRegistration(LivingEntity.class, ZOMBIE)
 				.impl(ZombificationComponent.class)
 				.respawnStrategy(RespawnCopyStrategy.CHARACTER)

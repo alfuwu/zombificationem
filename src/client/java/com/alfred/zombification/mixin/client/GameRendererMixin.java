@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GameRendererMixin {
     @Shadow @Nullable PostEffectProcessor postProcessor;
     @Shadow @Final MinecraftClient client;
-    @Shadow public abstract void loadPostProcessor(Identifier id);
+    @Shadow abstract void loadPostProcessor(Identifier id);
 
     @Inject(method = "onCameraEntitySet", at = @At("RETURN"))
     private void modifyShader(Entity entity, CallbackInfo ci) {
