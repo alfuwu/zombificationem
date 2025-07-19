@@ -18,10 +18,10 @@ public class ZombieClient implements ClientModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			boolean isZombified = (client.getCameraEntity() != null && (ZombieMod.ZOMBIE.get(client.getCameraEntity()).isZombified() || client.getCameraEntity() instanceof ZombieEntity || client.getCameraEntity() instanceof ZombieHorseEntity)) || (client.getCameraEntity() == null && client.player != null && ZombieMod.ZOMBIE.get(client.player).isZombified());
 			if (!wasZombified && isZombified) {
-				client.gameRenderer.disablePostProcessor();
-				client.gameRenderer.loadPostProcessor(ZOMBIE_VISION);
+				client.gameRenderer.disableShader();
+				client.gameRenderer.loadShader(ZOMBIE_VISION);
 			} else if (wasZombified && !isZombified && !(client.getCameraEntity() instanceof CreeperEntity || client.getCameraEntity() instanceof SpiderEntity || client.getCameraEntity() instanceof EndermanEntity)) {
-				client.gameRenderer.disablePostProcessor();
+				client.gameRenderer.disableShader();
 			}
 			wasZombified = isZombified;
 		});

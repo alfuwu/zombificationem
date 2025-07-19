@@ -130,7 +130,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                 if (zombieVillagerEntity != null) {
                     zombieVillagerEntity.initialize(world, world.getLocalDifficulty(zombieVillagerEntity.getBlockPos()), SpawnReason.CONVERSION, new ZombieEntity.ZombieData(false, true), null);
                     zombieVillagerEntity.setVillagerData(villagerEntity.getVillagerData());
-                    zombieVillagerEntity.setGossipData(villagerEntity.getGossip().serialize(NbtOps.INSTANCE));
+                    zombieVillagerEntity.setGossipData(villagerEntity.getGossip().serialize(NbtOps.INSTANCE).getValue());
                     zombieVillagerEntity.setOfferData(villagerEntity.getOffers().toNbt());
                     zombieVillagerEntity.setXp(villagerEntity.getExperience());
                     if (!this.isSilent())

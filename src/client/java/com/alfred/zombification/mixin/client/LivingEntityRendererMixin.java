@@ -20,7 +20,7 @@ public class LivingEntityRendererMixin<T extends LivingEntity> {
     }
 
     @ModifyArgs(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/EntityModel;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;IIFFFF)V"))
-    private void modifyRenderColor(Args args, @Local T entity) {
+    private void modifyRenderColor(Args args, @Local(argsOnly = true) T entity) {
         if (ZombieMod.ZOMBIE.get(entity).isZombified()) {
             args.set(4, 0.69f); // Red
             args.set(5, 1.0f); // Green

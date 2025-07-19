@@ -69,7 +69,7 @@ public abstract class LivingEntityMixin extends Entity {
     protected boolean isAffectedByDaylight() {
         if (this.getWorld().isDay() && !this.getWorld().isClient) {
             float f = this.getBrightnessAtEyes();
-            BlockPos blockPos = BlockPos.ofFloored(this.getX(), this.getEyeY(), this.getZ());
+            BlockPos blockPos = new BlockPos(Math.floor(this.getX()), Math.floor(this.getEyeY()), Math.floor(this.getZ()));
             boolean bl = this.isWet() || this.inPowderSnow || this.wasInPowderSnow;
             return f > 0.5f && this.random.nextFloat() * 30.0f < (f - 0.4f) * 2.0f && !bl && this.getWorld().isSkyVisible(blockPos);
         }
