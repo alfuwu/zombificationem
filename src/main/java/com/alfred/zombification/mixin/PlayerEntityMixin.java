@@ -23,8 +23,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -120,7 +118,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     @Inject(method = "onKilledOther", at = @At("HEAD"), cancellable = true)
-    private void convertVillager(ServerWorld world, LivingEntity other, CallbackInfoReturnable<Boolean> cir) {
+    private void convertVillager(ServerWorld world, LivingEntity other, CallbackInfo ci) {
         if (ZombieMod.ZOMBIE.get(this).isZombified()) {
             if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && other instanceof VillagerEntity villagerEntity) {
                 if (world.getDifficulty() != Difficulty.HARD && this.random.nextBoolean())
@@ -136,7 +134,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
                     if (!this.isSilent())
                         world.syncWorldEvent(null, 1026, this.getBlockPos(), 0);
 
-                    cir.setReturnValue(false);
+                    ci.cancel();
                 }
             }
         }
