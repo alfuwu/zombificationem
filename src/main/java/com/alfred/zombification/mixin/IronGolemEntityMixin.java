@@ -20,9 +20,6 @@ public abstract class IronGolemEntityMixin extends GolemEntity {
 
     @Inject(method = "initGoals", at = @At("TAIL"))
     private void attackZombs(CallbackInfo ci) {
-        this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, 5, false, false, (plr) -> {
-            System.out.println(ZombieMod.ZOMBIE.get(plr).isZombified());
-            return ZombieMod.ZOMBIE.get(plr).isZombified();
-        }));
+        this.targetSelector.add(3, new ActiveTargetGoal(this, PlayerEntity.class, 5, false, false, (plr) -> ZombieMod.ZOMBIE.get(plr).isZombified()));
     }
 }
