@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "zombification",
+	"version": "${version}",
+	"name": "Zombification",
+	"description": "",
+	"authors": [
+		"Alfred"
+	],
+	"contact": {
+		"sources": "https://github.com/alfuwu/Zombificationem"
+	},
+	"accessWidener": "zombification.accesswidener",
+	"license": "MIT",
+	"icon": "assets/zombification/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.alfred.zombification.fabric.ZombieModFabric"
+		],
+		"client": [
+			"com.alfred.zombification.fabric.ZombieClientFabric"
+		]
+	},
+	"mixins": [
+      "zombification.mixins.json",
+	  "zombification-common.mixins.json"
+	],
+	"depends": {
+		"fabricloader": "*",
+		"minecraft": "~1.18.2",
+		"java": ">=17",
+		"fabric": "*",
+		"architectury": ">=4.11.93"
+	}
+}

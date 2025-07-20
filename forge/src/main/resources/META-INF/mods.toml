@@ -1,0 +1,33 @@
+modLoader = "javafml"
+loaderVersion = "[40,)"
+#issueTrackerURL = ""
+license = "MIT"
+
+[[mods]]
+modId = "zombification"
+version = "${version}"
+displayName = "Zombification"
+authors = "Alfred"
+description = ""
+#logoFile = ""
+
+[[dependencies.zombification]]
+modId = "forge"
+mandatory = true
+versionRange = "[40,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.zombification]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.18.2,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.zombification]]
+modId = "architectury"
+mandatory = true
+versionRange = "[4.11.93,)"
+ordering = "AFTER"
+side = "BOTH"

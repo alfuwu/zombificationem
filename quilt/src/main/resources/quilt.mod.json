@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "mixin": [
+    "zombification.mixins.json",
+    "zombification-common.mixins.json"
+  ],
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "zombification",
+    "version": "${version}",
+    "metadata": {
+      "name": "Zombification",
+      "description": "",
+      "contributors": {
+        "Alfred": "Owner"
+      },
+      "contact": {
+        "sources": "https://github.com/alfuwu/zombification"
+      },
+      "icon": "assets/zombification/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "com.alfred.zombification.quilt.ZombieModQuilt"
+      ],
+      "client": [
+        "com.alfred.zombification.quilt.ZombieClientQuilt"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.18.2"
+      },
+      {
+        "id": "architectury",
+        "version": ">=4.11.93"
+      }
+    ]
+  },
+  "minecraft": {
+    "environment": "*"
+  }
+}

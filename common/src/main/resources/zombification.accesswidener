@@ -1,0 +1,3 @@
+accessWidener   v2  named
+
+accessible method net/minecraft/client/renderer/GameRenderer loadEffect (Lnet/minecraft/resources/ResourceLocation;)V
