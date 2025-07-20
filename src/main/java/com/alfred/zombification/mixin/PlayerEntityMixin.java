@@ -66,7 +66,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "onDeath", at = @At("HEAD"), cancellable = true)
     private void onDeath(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity livingEntity = this.getPrimeAdversary();
-        if (livingEntity instanceof ZombieEntity && !ZombieMod.ZOMBIE.get(this).isZombified()) {
+        if ((livingEntity instanceof ZombieEntity || livingEntity != null && ZombieMod.ZOMBIE.get(livingEntity).isZombified()) && !ZombieMod.ZOMBIE.get(this).isZombified()) {
             ci.cancel();
             this.incrementStat(Stats.KILLED_BY.getOrCreateStat(livingEntity.getType()));
             livingEntity.updateKilledAdvancementCriterion(this, this.scoreAmount, damageSource);
