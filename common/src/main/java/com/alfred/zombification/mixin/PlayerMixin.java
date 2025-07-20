@@ -2,8 +2,11 @@ package com.alfred.zombification.mixin;
 
 import com.alfred.zombification.ZombieMod;
 import com.alfred.zombification.access.ZombifiableEntity;
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -64,8 +67,7 @@ public abstract class PlayerMixin extends LivingEntity implements ZombifiableEnt
     @Inject(method = "die", at = @At("HEAD"), cancellable = true)
     private void onDeath(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity livingEntity = this.getLastHurtByMob();
-        if (livingEntity instanceof Zombie && !this.isZombified()) {
-            System.out.println("zombifying");
+        if ((livingEntity instanceof Zombie || livingEntity instanceof ZombifiableEntity zomb && zomb.isZombified()) && !this.isZombified()) {
             ci.cancel();
             this.awardStat(Stats.ENTITY_KILLED_BY.get(livingEntity.getType()));
             livingEntity.awardKillScore(this, this.deathScore, damageSource);
@@ -73,8 +75,8 @@ public abstract class PlayerMixin extends LivingEntity implements ZombifiableEnt
             this.setHealth(this.getMaxHealth());
             this.dead = false;
             this.inventory.selected = 0;
-            //if ((Player) (Object) this instanceof ServerPlayer serverPlayer)
-                //ServerPlayNetworking.send(serverPlayer, ZombieMod.SELECT_SLOT, new PacketByteBuf(Unpooled.copyShort(0)));
+            if ((Player) (Object) this instanceof ServerPlayer serverPlayer)
+                NetworkManager.sendToPlayer(serverPlayer, ZombieMod.SELECT_SLOT, new FriendlyByteBuf(Unpooled.copyShort(0)));
             AttributeInstance moveSpeed = this.getAttribute(Attributes.MOVEMENT_SPEED);
             if (moveSpeed != null) {
                 moveSpeed.removeModifier(ZombieMod.ZOMBIE_SPEED_MODIFIER);

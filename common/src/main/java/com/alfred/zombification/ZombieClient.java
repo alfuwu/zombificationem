@@ -26,7 +26,6 @@ public class ZombieClient {
                 NetworkManager.sendToServer(ZombieMod.SYNC_PACKET, new FriendlyByteBuf(Unpooled.buffer()).writeUUID(player.getUUID()));
             return EventResult.pass();
         }));
-        System.out.println("client initialized");
     }
 
     public static void tick(Minecraft client) {

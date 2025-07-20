@@ -40,14 +40,15 @@ public class ZombieMod {
             player.setUnzombifying(data.unzombifying);
             player.setConversionTimer(data.conversionTimer);
         });
+
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SELECT_SLOT, (buf, context) ->
+            context.getPlayer().getInventory().selected = buf.readShort());
     }
 
     public static void sendToAll(ServerPlayer source) {
-        System.out.println("syncing");
         MinecraftServer server = source.getServer();
         if (server == null)
             return;
-        System.out.println("still syncing");
         server.getPlayerList().getPlayers().forEach(player ->
                 NetworkManager.sendToPlayer(player, SYNC_PACKET,
                         PlayerData.toBuf((ZombifiableEntity) player).writeUUID(source.getUUID())));
