@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
-    @Shadow @Final private static Identifier HOTBAR_TEXTURE;
-    @Unique private static final Identifier HOTBAR_TEXTURE_ONE_SLOT = ZombieMod.identifier("hotbar");
+    /*@Shadow @Final private static Identifier HOTBAR_TEXTURE;
+    @Unique private static final Identifier HOTBAR_TEXTURE_ONE_SLOT = ZombieMod.identifier("hotbar");*/
 
     @ModifyConstant(method = "renderHotbar", constant = @Constant(intValue = 9))
     private int modifyItemAmount(int constant) {
@@ -38,8 +38,9 @@ public class InGameHudMixin {
         return this.client.player != null && ZombieMod.ZOMBIE.get(this.client.player).isZombified() ? 22 : constant;
     }
 
+    /*
     @ModifyArg(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"), index = 0)
     private Identifier newHotbarTexture(Identifier texture) {
         return texture.equals(HOTBAR_TEXTURE) && this.client.player != null && ZombieMod.ZOMBIE.get(this.client.player).isZombified() ? HOTBAR_TEXTURE_ONE_SLOT : texture;
-    }
+    }*/
 }

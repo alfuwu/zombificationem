@@ -26,11 +26,11 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
     }
 
     @WrapOperation(method = "renderArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelPart;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;II)V"))
-    private void shakingArm(ModelPart part, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, Operation<Void> original, @Local(argsOnly = true) VertexConsumerProvider provider, @Local(argsOnly = true) AbstractClientPlayerEntity player, @Local Identifier skinTexture) {
+    private void shakingArm(ModelPart part, MatrixStack matrices, VertexConsumer vertices, int light, int overlay, Operation<Void> original, @Local(argsOnly = true) VertexConsumerProvider provider, @Local(argsOnly = true) AbstractClientPlayerEntity player) {
         if (this.isShaking(player))
             matrices.translate(Math.cos((double) player.age * 3.25) * Math.PI * 0.0025, 0, Math.sin((double) player.age * 3.25) * Math.PI * 0.00125);
         if (ZombieMod.ZOMBIE.get(player).isZombified())
-            part.render(matrices, provider.getBuffer(RenderLayer.getEntityTranslucent(skinTexture)), light, overlay, 0.69f, 1.0f, 0.69f, 1.0f);
+            part.render(matrices, provider.getBuffer(RenderLayer.getEntityTranslucent(player.getSkinTexture())), light, overlay, 0.69f, 1.0f, 0.69f, 1.0f);
         else
             original.call(part, matrices, vertices, light, overlay);
     }
